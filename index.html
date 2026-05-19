@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sejarah Tahun 5 – Pembelajaran Interaktif</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628;
+  --navy2: #0f2245;
+  --navy3: #1a3566;
+  --gold: #d4a017;
+  --gold2: #f0c040;
+  --gold3: #ffe082;
+  --white: #ffffff;
+  --light: #f4f6fa;
+  --red: #c0392b;
+  --green: #27ae60;
+  --text: #1a2744;
+  --muted: #5a6a8a;
+  --card-bg: rgba(255,255,255,0.97);
+  --shadow: 0 8px 32px rgba(10,22,40,0.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden;}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(--navy);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s;}
+.loading-star{font-size:64px;animation:spin 1.2s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.loading-text{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);margin-top:1.5rem;letter-spacing:2px;}
+
+/* NAV */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,22,40,0.97);border-bottom:2px solid var(--gold);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(8px);}
+.nav-brand{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:1px;cursor:pointer;}
+.nav-links{display:flex;gap:.5rem;flex-wrap:wrap;}
+.nav-btn{background:transparent;border:1.5px solid var(--gold);color:var(--gold);padding:.3rem .8rem;border-radius:20px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;transition:all .2s;}
+.nav-btn:hover,.nav-btn.active{background:var(--gold);color:var(--navy);}
+#clock{font-size:.8rem;color:var(--gold3);font-weight:700;white-space:nowrap;}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:70px;}
+.page.active{display:block;}
+
+/* HOME */
+#home{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 50%,var(--navy3) 100%);}
+.hero{text-align:center;padding:3rem 1rem 2rem;}
+.hero-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:.75rem;font-weight:800;padding:.3rem 1rem;border-radius:20px;letter-spacing:2px;margin-bottom:1rem;text-transform:uppercase;}
+.hero h1{font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,3rem);color:var(--white);line-height:1.2;margin-bottom:.5rem;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{font-size:1rem;color:var(--gold3);margin-bottom:2rem;}
+.banner-anim{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1rem 0 2rem;}
+.banner-icon{width:70px;height:70px;background:rgba(212,160,23,.13);border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;animation:float 3s ease-in-out infinite;}
+.banner-icon:nth-child(2){animation-delay:.5s;}
+.banner-icon:nth-child(3){animation-delay:1s;}
+.banner-icon:nth-child(4){animation-delay:1.5s;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;padding:1.5rem;max-width:1100px;margin:0 auto;}
+.topic-card{background:rgba(255,255,255,.05);border:2px solid rgba(212,160,23,.4);border-radius:18px;padding:2rem;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.topic-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,160,23,.08),transparent);opacity:0;transition:.3s;}
+.topic-card:hover{transform:translateY(-8px);border-color:var(--gold);box-shadow:0 16px 48px rgba(212,160,23,.2);}
+.topic-card:hover::before{opacity:1;}
+.topic-num{font-family:'Cinzel',serif;font-size:2.5rem;color:var(--gold);opacity:.3;position:absolute;top:1rem;right:1.5rem;}
+.topic-icon{font-size:3rem;margin-bottom:1rem;}
+.topic-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:.8rem;}
+.topic-sk{font-size:.8rem;color:var(--gold3);margin-bottom:.4rem;font-weight:700;}
+.topic-desc{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.6;}
+.topic-sp,.topic-emk{font-size:.78rem;color:rgba(255,255,255,.6);margin-top:.5rem;padding:.4rem .8rem;background:rgba(212,160,23,.1);border-radius:8px;border-left:3px solid var(--gold);}
+
+/* TOPIC PAGE */
+.topic-page{background:var(--light);color:var(--text);}
+.topic-header{background:linear-gradient(135deg,var(--navy),var(--navy3));padding:2rem 1.5rem 3rem;text-align:center;position:relative;}
+.topic-header h2{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3vw,2rem);color:var(--gold);}
+.topic-header p{color:var(--gold3);font-size:.9rem;margin-top:.5rem;}
+.topic-nav{display:flex;gap:.5rem;flex-wrap:wrap;padding:1rem;justify-content:center;background:var(--navy2);border-bottom:2px solid var(--gold);}
+.tnav-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.4rem .9rem;border-radius:15px;cursor:pointer;font-size:.8rem;font-weight:700;transition:all .2s;white-space:nowrap;}
+.tnav-btn:hover,.tnav-btn.active{background:var(--gold);color:var(--navy);}
+.topic-content{padding:1.5rem;max-width:1000px;margin:0 auto;}
+.content-section{display:none;}
+.content-section.active{display:block;}
+
+/* CARDS */
+.info-card{background:var(--card-bg);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow);border-left:5px solid var(--gold);}
+.info-card h3{font-family:'Cinzel',serif;color:var(--navy);font-size:1.1rem;margin-bottom:.8rem;}
+.info-card p{color:var(--text);line-height:1.7;font-size:.95rem;}
+.heroes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;}
+.hero-card{background:var(--card-bg);border-radius:14px;padding:1.2rem;text-align:center;box-shadow:var(--shadow);border-top:4px solid var(--gold);transition:transform .2s;}
+.hero-card:hover{transform:translateY(-4px);}
+.hero-avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy3));margin:0 auto .8rem;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid var(--gold);}
+.hero-card h4{font-size:.9rem;font-weight:800;color:var(--navy);margin-bottom:.4rem;}
+.hero-card p{font-size:.78rem;color:var(--muted);line-height:1.5;}
+
+/* QUIZ */
+.quiz-wrapper{background:var(--card-bg);border-radius:18px;padding:2rem;box-shadow:var(--shadow);max-width:700px;margin:0 auto;}
+.quiz-form-row{margin-bottom:1rem;}
+.quiz-form-row label{display:block;font-weight:700;color:var(--navy);margin-bottom:.4rem;font-size:.9rem;}
+.quiz-form-row input,.quiz-form-row select{width:100%;padding:.7rem 1rem;border:2px solid #dde;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;outline:none;transition:border .2s;}
+.quiz-form-row input:focus,.quiz-form-row select:focus{border-color:var(--gold);}
+.start-btn{background:var(--gold);color:var(--navy);border:none;padding:.9rem 2.5rem;border-radius:30px;font-size:1.1rem;font-weight:800;cursor:pointer;transition:all .2s;width:100%;}
+.start-btn:hover{background:var(--gold2);transform:scale(1.02);}
+.quiz-area{display:none;}
+.quiz-progress{height:8px;background:#eee;border-radius:4px;margin-bottom:1.5rem;overflow:hidden;}
+.quiz-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s;}
+.quiz-timer{text-align:right;font-size:.85rem;font-weight:700;color:var(--red);margin-bottom:1rem;}
+.quiz-q-num{font-size:.8rem;color:var(--muted);margin-bottom:.5rem;}
+.quiz-question{font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:1.5rem;line-height:1.6;}
+.quiz-options{display:grid;gap:.8rem;}
+.quiz-opt{background:#f8f9fc;border:2px solid #dde;border-radius:12px;padding:.9rem 1.2rem;cursor:pointer;transition:all .2s;font-size:.95rem;font-weight:600;color:var(--text);text-align:left;}
+.quiz-opt:hover{border-color:var(--gold);background:#fffbe6;}
+.quiz-opt.correct{background:#e8f8ee;border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:#fdecea;border-color:var(--red);color:var(--red);}
+.quiz-opt.disabled{cursor:not-allowed;opacity:.7;}
+.quiz-feedback{text-align:center;padding:1rem;border-radius:10px;margin-top:1rem;font-weight:700;font-size:1rem;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.correct-fb{background:#e8f8ee;color:var(--green);}
+.quiz-feedback.wrong-fb{background:#fdecea;color:var(--red);}
+.next-btn{background:var(--navy);color:var(--white);border:none;padding:.8rem 2rem;border-radius:25px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:1rem;display:none;}
+.next-btn.show{display:inline-block;}
+.quiz-result{display:none;text-align:center;}
+.result-score{font-size:4rem;font-weight:900;color:var(--gold);font-family:'Cinzel',serif;}
+.result-msg{font-size:1.1rem;color:var(--text);margin:.5rem 0 1.5rem;}
+.retry-btn{background:var(--navy);color:var(--white);border:none;padding:.8rem 2rem;border-radius:25px;font-size:1rem;font-weight:700;cursor:pointer;margin:.3rem;}
+.retry-btn:hover{background:var(--navy3);}
+
+/* RECORDS */
+.records-wrapper{max-width:1000px;margin:0 auto;}
+.records-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;}
+.records-header h3{font-family:'Cinzel',serif;color:var(--navy);font-size:1.3rem;}
+.rec-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.rec-btn{padding:.5rem 1rem;border-radius:20px;border:none;cursor:pointer;font-size:.82rem;font-weight:700;transition:all .2s;}
+.rec-btn-dl{background:var(--navy);color:var(--white);}
+.rec-btn-dl:hover{background:var(--navy3);}
+.rec-btn-csv{background:var(--green);color:var(--white);}
+.rec-btn-ref{background:var(--gold);color:var(--navy);}
+.rec-table-wrap{overflow-x:auto;background:var(--card-bg);border-radius:16px;box-shadow:var(--shadow);}
+.rec-table{width:100%;border-collapse:collapse;font-size:.88rem;}
+.rec-table th{background:var(--navy);color:var(--gold);padding:.9rem .8rem;text-align:left;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;}
+.rec-table td{padding:.8rem .8rem;border-bottom:1px solid #eee;color:var(--text);}
+.rec-table tr:hover td{background:#fffbe6;}
+.badge{display:inline-block;padding:.2rem .7rem;border-radius:10px;font-size:.75rem;font-weight:700;}
+.badge-7{background:#fff3cd;color:#856404;}
+.badge-8{background:#d1ecf1;color:#0c5460;}
+.badge-9{background:#d4edda;color:#155724;}
+.del-rec{background:none;border:none;cursor:pointer;color:var(--red);font-size:1.1rem;padding:.2rem .4rem;}
+.leaderboard{margin-top:2rem;}
+.lb-title{font-family:'Cinzel',serif;color:var(--navy);font-size:1.1rem;margin-bottom:1rem;}
+.lb-item{display:flex;align-items:center;gap:1rem;padding:.7rem 1rem;background:var(--card-bg);border-radius:10px;margin-bottom:.5rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.lb-rank{font-family:'Cinzel',serif;font-size:1.3rem;min-width:2rem;text-align:center;}
+.lb-rank.gold{color:var(--gold);}
+.lb-rank.silver{color:#aaa;}
+.lb-rank.bronze{color:#cd7f32;}
+.lb-name{flex:1;font-weight:700;color:var(--text);}
+.lb-score{font-weight:800;color:var(--navy);font-size:1.1rem;}
+.lb-class{font-size:.8rem;color:var(--muted);}
+.no-records{text-align:center;padding:3rem;color:var(--muted);font-size:1rem;}
+
+/* ACTIVITY */
+.activity-title{font-family:'Cinzel',serif;color:var(--navy);font-size:1.2rem;margin-bottom:1rem;}
+.dnd-container{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.dnd-pool,.dnd-target{background:var(--card-bg);border-radius:14px;padding:1rem;box-shadow:var(--shadow);}
+.dnd-pool h4,.dnd-target h4{font-size:.85rem;color:var(--muted);margin-bottom.8rem;text-transform:uppercase;letter-spacing:1px;}
+.drag-item{background:var(--navy);color:var(--white);padding:.6rem 1rem;border-radius:10px;margin:.4rem 0;cursor:grab;font-size:.9rem;font-weight:600;transition:opacity .2s;}
+.drag-item:active{cursor:grabbing;opacity:.7;}
+.drop-zone{min-height:60px;border:2px dashed var(--gold);border-radius:10px;padding:.5rem;margin:.4rem 0;}
+.drop-zone.drag-over{background:#fffbe6;}
+.fill-item{display:flex;gap:.5rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+.fill-item span{font-size:.95rem;color:var(--text);}
+.fill-input{border:2px solid #dde;border-radius:8px;padding:.4rem .8rem;font-size:.9rem;width:150px;font-family:'Nunito',sans-serif;outline:none;}
+.fill-input:focus{border-color:var(--gold);}
+.check-act-btn{background:var(--gold);color:var(--navy);border:none;padding:.7rem 1.8rem;border-radius:20px;font-weight:800;cursor:pointer;font-size:.9rem;margin-top:1rem;}
+.act-result{margin-top:.8rem;font-weight:700;font-size:.95rem;}
+
+/* VIDEO */
+.video-wrap{background:var(--card-bg);border-radius:16px;padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1.5rem;}
+.video-placeholder{background:var(--navy);border-radius:12px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gold);font-size:3rem;margin-bottom:1rem;}
+.video-placeholder p{font-size:.9rem;color:var(--gold3);margin-top:.5rem;}
+.video-placeholder video{width:100%;border-radius:12px;}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:2rem;right:1.5rem;background:var(--gold);color:var(--navy);border:none;width:46px;height:46px;border-radius:50%;cursor:pointer;font-size:1.4rem;display:none;align-items:center;justify-content:center;box-shadow:var(--shadow);z-index:50;transition:all .2s;}
+#btt:hover{transform:scale(1.1);}
+#btt.show{display:flex;}
+
+/* FOOTER */
+footer{background:var(--navy);border-top:2px solid var(--gold);text-align:center;padding:1.5rem;color:var(--gold3);font-size:.82rem;}
+footer p:first-child{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);margin-bottom:.4rem;}
+
+/* DARK/LIGHT TOGGLE */
+body.light-mode{--navy:#1a3566;--navy2:#2a4a8a;--navy3:#3a5aa0;--text:#0a1628;--light:#eef2f9;--card-bg:#ffffff;background:var(--light);}
+body.light-mode .topic-card{background:rgba(255,255,255,.9);color:var(--navy);}
+body.light-mode .topic-desc{color:rgba(10,22,40,.75);}
+
+/* FIREBASE STATUS */
+.fb-status{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;padding:.3rem .8rem;border-radius:12px;font-weight:700;}
+.fb-status.online{background:#d4edda;color:#155724;}
+.fb-status.offline{background:#f8d7da;color:#721c24;}
+.fb-dot{width:8px;height:8px;border-radius:50%;}
+.fb-status.online .fb-dot{background:#28a745;animation:pulse 1.5s infinite;}
+.fb-status.offline .fb-dot{background:#dc3545;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;}
+.edit-modal.show{display:flex;}
+.edit-box{background:#fff;border-radius:18px;padding:2rem;max-width:450px;width:90%;box-shadow:var(--shadow);}
+.edit-box h3{color:var(--navy);font-family:'Cinzel',serif;margin-bottom:1rem;}
+.edit-box input,.edit-box select{width:100%;padding:.7rem;border:2px solid #dde;border-radius:8px;margin-bottom:.8rem;font-family:'Nunito',sans-serif;font-size:.95rem;}
+.edit-save{background:var(--gold);color:var(--navy);border:none;padding:.7rem 1.5rem;border-radius:20px;font-weight:800;cursor:pointer;margin-right:.5rem;}
+.edit-cancel{background:#eee;color:#666;border:none;padding:.7rem 1.5rem;border-radius:20px;font-weight:700;cursor:pointer;}
+@media(max-width:600px){
+  .nav-links{display:none;}
+  .dnd-container{grid-template-columns:1fr;}
+  .heroes-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="loading-star">🌟</div>
+  <div class="loading-text">SEJARAH TAHUN 5</div>
+  <div style="color:#ffe082;margin-top:.5rem;font-size:.9rem;">Memuatkan Laman Pembelajaran...</div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-brand" onclick="showPage('home')">⚔️ SEJARAH T5</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home')">Utama</button>
+    <button class="nav-btn" onclick="showTopic(7)">Tajuk 7</button>
+    <button class="nav-btn" onclick="showTopic(8)">Tajuk 8</button>
+    <button class="nav-btn" onclick="showTopic(9)">Tajuk 9</button>
+    <button class="nav-btn" onclick="showPage('records-page')">📊 Rekod</button>
+    <button class="nav-btn" id="darkToggle" onclick="toggleDark()">🌙</button>
+  </div>
+  <div id="clock">--:--:--</div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="home" class="page active">
+  <div class="hero">
+    <div class="hero-badge">Kurikulum Sekolah Rendah Malaysia</div>
+    <h1>SEJARAH TAHUN 5<br><span>Pembelajaran Interaktif</span></h1>
+    <p class="hero-sub">Perjuangan Kemerdekaan • Yang Di-Pertuan Agong • Identiti Negara</p>
+    <div class="banner-anim">
+      <div class="banner-icon">⚔️</div>
+      <div class="banner-icon">👑</div>
+      <div class="banner-icon">🦅</div>
+      <div class="banner-icon">🏛️</div>
+    </div>
+  </div>
+  <div class="topics-grid">
+    <!-- Tajuk 7 -->
+    <div class="topic-card" onclick="showTopic(7)">
+      <div class="topic-num">7</div>
+      <div class="topic-icon">⚔️</div>
+      <div class="topic-title">Perjuangan Kemerdekaan Negara</div>
+      <div class="topic-sk">Standard Kandungan:</div>
+      <div class="topic-desc">7.2 Perjuangan Menentang Campur Tangan dan Penjajahan</div>
+      <div class="topic-sp">SP: 7.2.1 Menyenaraikan tokoh tempatan yang menentang penjajahan kuasa asing.</div>
+      <div class="topic-emk">EMK: K7.2.4 Menyatakan iktibar daripada perjuangan tokoh terdahulu.</div>
+    </div>
+    <!-- Tajuk 8 -->
+    <div class="topic-card" onclick="showTopic(8)">
+      <div class="topic-num">8</div>
+      <div class="topic-icon">👑</div>
+      <div class="topic-title">Yang Di-Pertuan Agong</div>
+      <div class="topic-sk">Standard Kandungan:</div>
+      <div class="topic-desc">8.1 Institusi Yang di-Pertuan Agong sebagai Ketua Utama Negara</div>
+      <div class="topic-sp">SP: 8.1.1 Menyatakan kedudukan YDPA sebagai Ketua Utama Negara.</div>
+      <div class="topic-emk">EMK: K8.1.6 Kepentingan menghargai YDPA sebagai tonggak perpaduan.</div>
+    </div>
+    <!-- Tajuk 9 -->
+    <div class="topic-card" onclick="showTopic(9)">
+      <div class="topic-num">9</div>
+      <div class="topic-icon">🦅</div>
+      <div class="topic-title">Identiti Negara Kita</div>
+      <div class="topic-sk">Standard Kandungan:</div>
+      <div class="topic-desc">9.1 Jata Negara – Lambang Kebangsaan Malaysia</div>
+      <div class="topic-sp">SP: 9.1.1 Menyatakan sejarah Jata Negara Malaysia.</div>
+      <div class="topic-emk">EMK: K9.1.4 Menyatakan kepentingan menghormati Jata Negara.</div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:1rem;">
+    <span id="fb-indicator" class="fb-status offline"><span class="fb-dot"></span>Menghubungi pangkalan data...</span>
+  </div>
+</div>
+
+<!-- TOPIC 7 -->
+<div id="topic7" class="page topic-page">
+  <div class="topic-header">
+    <div style="font-size:3rem;margin-bottom:.5rem;">⚔️</div>
+    <h2>Tajuk 7: Perjuangan Kemerdekaan Negara</h2>
+    <p>7.2 Perjuangan Menentang Campur Tangan dan Penjajahan</p>
+  </div>
+  <div class="topic-nav">
+    <button class="tnav-btn active" onclick="showSection(7,'sc')">Standard Kandungan</button>
+    <button class="tnav-btn" onclick="showSection(7,'sp')">Standard Pembelajaran</button>
+    <button class="tnav-btn" onclick="showSection(7,'emk')">EMK</button>
+    <button class="tnav-btn" onclick="showSection(7,'nota')">Nota Interaktif</button>
+    <button class="tnav-btn" onclick="showSection(7,'video')">Video</button>
+    <button class="tnav-btn" onclick="showSection(7,'aktiviti')">Aktiviti</button>
+    <button class="tnav-btn" onclick="showSection(7,'kuiz')">Kuiz Digital</button>
+    <button class="tnav-btn" onclick="showPage('records-page')">📊 Rekod Kuiz</button>
+  </div>
+  <div class="topic-content">
+    <!-- SC -->
+    <div id="t7-sc" class="content-section active">
+      <div class="info-card"><h3>⚔️ Standard Kandungan 7.2</h3><p><strong>Perjuangan Menentang Campur Tangan dan Penjajahan</strong><br><br>Murid-murid akan mempelajari tentang perjuangan rakyat tempatan Malaysia dalam menentang campur tangan dan penjajahan kuasa asing di Tanah Melayu dan Borneo. Perjuangan ini menunjukkan semangat patriotisme dan cinta akan tanah air yang tidak pernah padam dalam kalangan rakyat Malaysia.</p></div>
+    </div>
+    <!-- SP -->
+    <div id="t7-sp" class="content-section">
+      <div class="info-card"><h3>📚 Standard Pembelajaran 7.2.1</h3><p>Menyenaraikan tokoh tempatan yang menentang campur tangan dan penjajahan kuasa asing.<br><br>Pada akhir pembelajaran, murid dapat:<br>✅ Menyenaraikan nama tokoh pejuang tempatan<br>✅ Mengenal pasti kawasan perjuangan setiap tokoh<br>✅ Menerangkan tindakan yang diambil oleh setiap tokoh<br>✅ Menghargai semangat perjuangan tokoh-tokoh tersebut</p></div>
+    </div>
+    <!-- EMK -->
+    <div id="t7-emk" class="content-section">
+      <div class="info-card"><h3>🌟 Elemen Merentas Kurikulum K7.2.4</h3><p>Menyatakan iktibar yang diperoleh daripada perjuangan tokoh terdahulu.<br><br><strong>Iktibar yang boleh kita ambil:</strong><br>🔹 Semangat patriotisme – cinta akan tanah air<br>🔹 Keberanian mempertahankan kedaulatan<br>🔹 Perpaduan kaum dalam menghadapi musuh bersama<br>🔹 Pengorbanan demi generasi akan datang<br>🔹 Ketabahan menghadapi cabaran</p></div>
+    </div>
+    <!-- NOTA -->
+    <div id="t7-nota" class="content-section">
+      <h3 style="font-family:'Cinzel',serif;color:var(--navy);margin-bottom:1.2rem;">⚔️ Tokoh-Tokoh Pahlawan Tempatan</h3>
+      <div class="heroes-grid">
+        <div class="hero-card"><div class="hero-avatar">⚔️</div><h4>Dol Said</h4><p>Pahlawan Naning, Melaka. Menentang British pada tahun 1831-1832.</p></div>
+        <div class="hero-card"><div class="hero-avatar">🦅</div><h4>Rentap</h4><p>Pahlawan Iban Sarawak. Menentang Rajah Brooke di Bukit Sadok.</p></div>
+        <div class="hero-card"><div class="hero-avatar">🌊</div><h4>Sharif Masahor</h4><p>Pahlawan Sarawak. Menentang penjajahan British di kawasan Rejang.</p></div>
+        <div class="hero-card"><div class="hero-avatar">👑</div><h4>Dato' Maharaja Lela</h4><p>Pahlawan Perak. Membunuh Residen British J.W.W. Birch pada 1875.</p></div>
+        <div class="hero-card"><div class="hero-avatar">🏔️</div><h4>Yamtuan Antah</h4><p>Pahlawan Negeri Sembilan. Menentang campur tangan British 1874.</p></div>
+        <div class="hero-card"><div class="hero-avatar">🌿</div><h4>Dato' Bahaman</h4><p>Pahlawan Pahang. Memimpin Perang Pahang menentang British.</p></div>
+        <div class="hero-card"><div class="hero-avatar">⭐</div><h4>Mat Salleh</h4><p>Pahlawan Sabah. Menentang Syarikat Borneo Utara British.</p></div>
+        <div class="hero-card"><div class="hero-avatar">🌺</div><h4>Antenom</h4><p>Pahlawan Sarawak. Pejuang setia menentang penjajah.</p></div>
+        <div class="hero-card"><div class="hero-avatar">🕌</div><h4>Tok Janggut</h4><p>Pahlawan Kelantan. Memimpin penentangan pada 1915.</p></div>
+        <div class="hero-card"><div class="hero-avatar">📿</div><h4>Haji Abdul Rahman Limbong</h4><p>Pahlawan Terengganu. Menentang British pada 1928.</p></div>
+      </div>
+    </div>
+    <!-- VIDEO -->
+    <div id="t7-video" class="content-section">
+      <div class="video-wrap">
+        <h3 style="color:var(--navy);font-family:'Cinzel',serif;margin-bottom:1rem;">🎬 Video Pembelajaran</h3>
+        <div class="video-placeholder">
+          <video controls style="width:100%;border-radius:12px;" onerror="this.parentElement.innerHTML='<div style=\'padding:2rem;text-align:center\'><div style=\'font-size:3rem\'>🎬</div><p style=\'color:var(--gold3);margin-top:.5rem\'>Letakkan fail video dalam folder <strong>video/tajuk7.mp4</strong></p></div>'">
+            <source src="video/tajuk7.mp4" type="video/mp4">
+            <p style="color:var(--gold3);font-size:.9rem;margin-top:.5rem">Letakkan fail video dalam folder <strong>video/tajuk7.mp4</strong></p>
+          </video>
+        </div>
+        <div class="info-card" style="margin-top:1rem;margin-bottom:0;">
+          <h3>📝 Penerangan Video</h3>
+          <p>Video ini menerangkan tentang tokoh-tokoh pahlawan tempatan yang berani menentang penjajahan kuasa asing di Tanah Melayu dan Borneo. Tonton dan pelajari semangat patriotisme mereka yang tidak pernah padam.</p>
+        </div>
+      </div>
+    </div>
+    <!-- AKTIVITI -->
+    <div id="t7-aktiviti" class="content-section">
+      <h3 class="activity-title">🎯 Aktiviti Padankan Tokoh</h3>
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:.9rem;">Seret dan lepaskan nama tokoh ke kawasan yang betul.</p>
+      <div class="dnd-container">
+        <div class="dnd-pool">
+          <h4 style="color:var(--muted);font-size:.8rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:.8rem;">Tokoh Pahlawan</h4>
+          <div class="drag-item" draggable="true" id="d1" ondragstart="drag(event)">Dol Said</div>
+          <div class="drag-item" draggable="true" id="d2" ondragstart="drag(event)">Rentap</div>
+          <div class="drag-item" draggable="true" id="d3" ondragstart="drag(event)">Mat Salleh</div>
+          <div class="drag-item" draggable="true" id="d4" ondragstart="drag(event)">Dato' Maharaja Lela</div>
+        </div>
+        <div class="dnd-pool">
+          <h4 style="color:var(--muted);font-size:.8rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:.8rem;">Kawasan Perjuangan</h4>
+          <div style="color:.9rem;color:var(--muted);margin-bottom:.5rem;font-size:.85rem;">📍 Melaka (Naning)</div>
+          <div class="drop-zone" id="dz1" ondragover="allowDrop(event)" ondrop="drop(event,'Dol Said')"></div>
+          <div style="color:.9rem;color:var(--muted);margin-top:.8rem;margin-bottom:.5rem;font-size:.85rem;">📍 Sarawak (Bukit Sadok)</div>
+          <div class="drop-zone" id="dz2" ondragover="allowDrop(event)" ondrop="drop(event,'Rentap')"></div>
+          <div style="color:.9rem;color:var(--muted);margin-top:.8rem;margin-bottom:.5rem;font-size:.85rem;">📍 Sabah</div>
+          <div class="drop-zone" id="dz3" ondragover="allowDrop(event)" ondrop="drop(event,'Mat Salleh')"></div>
+          <div style="color:.9rem;color:var(--muted);margin-top:.8rem;margin-bottom:.5rem;font-size:.85rem;">📍 Perak</div>
+          <div class="drop-zone" id="dz4" ondragover="allowDrop(event)" ondrop="drop(event,'Dato\' Maharaja Lela')"></div>
+        </div>
+      </div>
+      <div id="dnd-result" class="act-result"></div>
+      <hr style="margin:2rem 0;border:1px solid #eee;">
+      <h3 class="activity-title">✏️ Isi Tempat Kosong</h3>
+      <div class="fill-item"><span>1. Dol Said berasal dari negeri _______</span><input class="fill-input" id="fill1" placeholder="Jawapan..."></div>
+      <div class="fill-item"><span>2. Rentap adalah pahlawan kaum _______</span><input class="fill-input" id="fill2" placeholder="Jawapan..."></div>
+      <div class="fill-item"><span>3. Mat Salleh menentang _______ di Sabah.</span><input class="fill-input" id="fill3" placeholder="Jawapan..."></div>
+      <div class="fill-item"><span>4. Tok Janggut berasal dari negeri _______</span><input class="fill-input" id="fill4" placeholder="Jawapan..."></div>
+      <button class="check-act-btn" onclick="checkFill7()">✅ Semak Jawapan</button>
+      <div id="fill-result-7" class="act-result"></div>
+    </div>
+    <!-- KUIZ -->
+    <div id="t7-kuiz" class="content-section">
+      <div class="quiz-wrapper">
+        <h3 style="font-family:'Cinzel',serif;color:var(--navy);margin-bottom:1.5rem;font-size:1.2rem;">⚔️ Kuiz – Tajuk 7</h3>
+        <div id="quiz7-form">
+          <div class="quiz-form-row"><label>Nama Murid *</label><input id="q7-name" placeholder="Masukkan nama penuh..." required></div>
+          <div class="quiz-form-row"><label>Kelas *</label>
+            <select id="q7-class">
+              <option value="">-- Pilih Kelas --</option>
+              <option>5 Amanah</option><option>5 Bestari</option><option>5 Cemerlang</option>
+              <option>5 Dedikasi</option><option>5 Emas</option><option>5 Fokus</option>
+            </select>
+          </div>
+          <button class="start-btn" onclick="startQuiz(7)">🚀 Mulakan Kuiz</button>
+        </div>
+        <div id="quiz7-area" class="quiz-area">
+          <div class="quiz-timer" id="q7-timer">⏱ 00:00</div>
+          <div class="quiz-progress"><div class="quiz-progress-bar" id="q7-bar" style="width:0%"></div></div>
+          <div class="quiz-q-num" id="q7-qnum"></div>
+          <div class="quiz-question" id="q7-question"></div>
+          <div class="quiz-options" id="q7-options"></div>
+          <div class="quiz-feedback" id="q7-feedback"></div>
+          <button class="next-btn" id="q7-next" onclick="nextQuestion(7)">Seterusnya ➡️</button>
+        </div>
+        <div id="quiz7-result" class="quiz-result">
+          <div class="result-score" id="q7-score"></div>
+          <div class="result-msg" id="q7-msg"></div>
+          <button class="retry-btn" onclick="retryQuiz(7)">🔄 Cuba Semula</button>
+          <button class="retry-btn" onclick="showPage('records-page')">📊 Lihat Rekod</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPIC 8 -->
+<div id="topic8" class="page topic-page">
+  <div class="topic-header">
+    <div style="font-size:3rem;margin-bottom:.5rem;">👑</div>
+    <h2>Tajuk 8: Yang Di-Pertuan Agong</h2>
+    <p>8.1 Institusi Yang di-Pertuan Agong</p>
+  </div>
+  <div class="topic-nav">
+    <button class="tnav-btn active" onclick="showSection(8,'sc')">Standard Kandungan</button>
+    <button class="tnav-btn" onclick="showSection(8,'sp')">Standard Pembelajaran</button>
+    <button class="tnav-btn" onclick="showSection(8,'emk')">EMK</button>
+    <button class="tnav-btn" onclick="showSection(8,'nota')">Nota Interaktif</button>
+    <button class="tnav-btn" onclick="showSection(8,'video')">Video</button>
+    <button class="tnav-btn" onclick="showSection(8,'aktiviti')">Aktiviti</button>
+    <button class="tnav-btn" onclick="showSection(8,'kuiz')">Kuiz Digital</button>
+    <button class="tnav-btn" onclick="showPage('records-page')">📊 Rekod Kuiz</button>
+  </div>
+  <div class="topic-content">
+    <div id="t8-sc" class="content-section active">
+      <div class="info-card"><h3>👑 Standard Kandungan 8.1</h3><p><strong>Institusi Yang di-Pertuan Agong</strong><br><br>Yang di-Pertuan Agong (YDPA) adalah Ketua Utama Negara Malaysia. Baginda memegang peranan penting sebagai pemimpin tertinggi negara dan simbol perpaduan rakyat berbilang kaum.</p></div>
+    </div>
+    <div id="t8-sp" class="content-section">
+      <div class="info-card"><h3>📚 Standard Pembelajaran 8.1.1</h3><p>Menyatakan kedudukan Yang di-Pertuan Agong sebagai Ketua Utama Negara.<br><br>✅ Menyatakan maksud Yang di-Pertuan Agong<br>✅ Menjelaskan kedudukan YDPA dalam perlembagaan<br>✅ Menyenaraikan tugas dan tanggungjawab YDPA<br>✅ Menjelaskan kepentingan institusi diraja</p></div>
+    </div>
+    <div id="t8-emk" class="content-section">
+      <div class="info-card"><h3>🌟 EMK K8.1.6</h3><p>Menyatakan kepentingan menghargai Yang di-Pertuan Agong sebagai tonggak perpaduan.<br><br>🔹 YDPA adalah simbol perpaduan negara<br>🔹 Institusi diraja menjamin kestabilan politik<br>🔹 YDPA memelihara hak dan keistimewaan rakyat<br>🔹 Taat setia kepada YDPA adalah kewajipan warga Malaysia</p></div>
+    </div>
+    <div id="t8-nota" class="content-section">
+      <div class="info-card"><h3>👑 Maksud Yang di-Pertuan Agong</h3><p>Yang di-Pertuan Agong (YDPA) bermaksud "Tuan yang dipertuan" – pemimpin tertinggi Malaysia. Baginda dipilih oleh Majlis Raja-Raja setiap 5 tahun sekali daripada kalangan sembilan Raja-Raja Melayu secara bergilir-gilir.</p></div>
+      <div class="info-card"><h3>🏛️ Kedudukan YDPA sebagai Ketua Utama Negara</h3><p>• Ketua Negara yang tertinggi mengikut Perlembagaan Persekutuan<br>• Ketua Agama Islam Persekutuan<br>• Pemerintah Tertinggi Angkatan Tentera<br>• Berkuasa mengisytiharkan darurat<br>• Melantik Perdana Menteri dan ahli Jemaah Menteri</p></div>
+      <div class="info-card"><h3>⚜️ Tugas dan Tanggungjawab YDPA</h3><p>• Menandatangani undang-undang yang diluluskan Parlimen<br>• Melantik hakim-hakim mahkamah<br>• Memberikan pengampunan<br>• Memperkenankan darurat jika perlu<br>• Menjaga kesejahteraan rakyat</p></div>
+      <div class="info-card"><h3>🌟 Alat Kebesaran Diraja</h3><p>• Nobat – alat muzik kebesaran<br>• Cogan Emas dan Perak<br>• Pedang Keadilan dan Pedang Pertabalan<br>• Keris Panjang<br>• Payung Ubur-Ubur Kuning Kebesaran</p></div>
+    </div>
+    <div id="t8-video" class="content-section">
+      <div class="video-wrap">
+        <h3 style="color:var(--navy);font-family:'Cinzel',serif;margin-bottom:1rem;">🎬 Video Pembelajaran</h3>
+        <div class="video-placeholder">
+          <video controls style="width:100%;border-radius:12px;" onerror="this.parentElement.innerHTML='<div style=\'padding:2rem;text-align:center\'><div style=\'font-size:3rem\'>🎬</div><p style=\'color:var(--gold3);margin-top:.5rem\'>Letakkan fail video dalam folder <strong>video/tajuk8.mp4</strong></p></div>'">
+            <source src="video/tajuk8.mp4" type="video/mp4">
+            <p style="color:var(--gold3);font-size:.9rem;margin-top:.5rem">Letakkan fail video dalam folder <strong>video/tajuk8.mp4</strong></p>
+          </video>
+        </div>
+        <div class="info-card" style="margin-top:1rem;margin-bottom:0;"><h3>📝 Penerangan Video</h3><p>Video ini menerangkan tentang institusi Yang di-Pertuan Agong, peranan dan tanggungjawab Baginda sebagai Ketua Utama Negara Malaysia.</p></div>
+      </div>
+    </div>
+    <div id="t8-aktiviti" class="content-section">
+      <h3 class="activity-title">🎯 Padankan Tugas YDPA</h3>
+      <div style="display:grid;gap:1rem;">
+        <div class="fill-item"><span>1. YDPA dilantik setiap _______ tahun sekali.</span><input class="fill-input" id="fill8-1" placeholder="Jawapan..."></div>
+        <div class="fill-item"><span>2. YDPA adalah Ketua Agama _______ Persekutuan.</span><input class="fill-input" id="fill8-2" placeholder="Jawapan..."></div>
+        <div class="fill-item"><span>3. YDPA dipilih daripada _______ Raja-Raja Melayu.</span><input class="fill-input" id="fill8-3" placeholder="Jawapan..."></div>
+        <div class="fill-item"><span>4. Nobat adalah _______ kebesaran diraja.</span><input class="fill-input" id="fill8-4" placeholder="Jawapan..."></div>
+      </div>
+      <button class="check-act-btn" onclick="checkFill8()">✅ Semak Jawapan</button>
+      <div id="fill-result-8" class="act-result"></div>
+    </div>
+    <div id="t8-kuiz" class="content-section">
+      <div class="quiz-wrapper">
+        <h3 style="font-family:'Cinzel',serif;color:var(--navy);margin-bottom:1.5rem;font-size:1.2rem;">👑 Kuiz – Tajuk 8</h3>
+        <div id="quiz8-form">
+          <div class="quiz-form-row"><label>Nama Murid *</label><input id="q8-name" placeholder="Masukkan nama penuh..." required></div>
+          <div class="quiz-form-row"><label>Kelas *</label>
+            <select id="q8-class">
+              <option value="">-- Pilih Kelas --</option>
+              <option>5 Amanah</option><option>5 Bestari</option><option>5 Cemerlang</option>
+              <option>5 Dedikasi</option><option>5 Emas</option><option>5 Fokus</option>
+            </select>
+          </div>
+          <button class="start-btn" onclick="startQuiz(8)">🚀 Mulakan Kuiz</button>
+        </div>
+        <div id="quiz8-area" class="quiz-area">
+          <div class="quiz-timer" id="q8-timer">⏱ 00:00</div>
+          <div class="quiz-progress"><div class="quiz-progress-bar" id="q8-bar" style="width:0%"></div></div>
+          <div class="quiz-q-num" id="q8-qnum"></div>
+          <div class="quiz-question" id="q8-question"></div>
+          <div class="quiz-options" id="q8-options"></div>
+          <div class="quiz-feedback" id="q8-feedback"></div>
+          <button class="next-btn" id="q8-next" onclick="nextQuestion(8)">Seterusnya ➡️</button>
+        </div>
+        <div id="quiz8-result" class="quiz-result">
+          <div class="result-score" id="q8-score"></div>
+          <div class="result-msg" id="q8-msg"></div>
+          <button class="retry-btn" onclick="retryQuiz(8)">🔄 Cuba Semula</button>
+          <button class="retry-btn" onclick="showPage('records-page')">📊 Lihat Rekod</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPIC 9 -->
+<div id="topic9" class="page topic-page">
+  <div class="topic-header">
+    <div style="font-size:3rem;margin-bottom:.5rem;">🦅</div>
+    <h2>Tajuk 9: Identiti Negara Kita</h2>
+    <p>9.1 Jata Negara Malaysia</p>
+  </div>
+  <div class="topic-nav">
+    <button class="tnav-btn active" onclick="showSection(9,'sc')">Standard Kandungan</button>
+    <button class="tnav-btn" onclick="showSection(9,'sp')">Standard Pembelajaran</button>
+    <button class="tnav-btn" onclick="showSection(9,'emk')">EMK</button>
+    <button class="tnav-btn" onclick="showSection(9,'nota')">Nota Interaktif</button>
+    <button class="tnav-btn" onclick="showSection(9,'video')">Video</button>
+    <button class="tnav-btn" onclick="showSection(9,'aktiviti')">Aktiviti</button>
+    <button class="tnav-btn" onclick="showSection(9,'kuiz')">Kuiz Digital</button>
+    <button class="tnav-btn" onclick="showPage('records-page')">📊 Rekod Kuiz</button>
+  </div>
+  <div class="topic-content">
+    <div id="t9-sc" class="content-section active">
+      <div class="info-card"><h3>🦅 Standard Kandungan 9.1</h3><p><strong>Jata Negara</strong><br><br>Jata Negara adalah lambang rasmi negara Malaysia yang mengandungi pelbagai simbol yang mewakili perpaduan, kekuatan dan identiti bangsa Malaysia.</p></div>
+    </div>
+    <div id="t9-sp" class="content-section">
+      <div class="info-card"><h3>📚 Standard Pembelajaran 9.1.1</h3><p>Menyatakan sejarah Jata Negara.<br><br>✅ Menyatakan maksud Jata Negara<br>✅ Mengenal pasti simbol-simbol pada Jata Negara<br>✅ Menerangkan makna warna pada Jata Negara<br>✅ Menjelaskan kepentingan menghormati Jata Negara</p></div>
+    </div>
+    <div id="t9-emk" class="content-section">
+      <div class="info-card"><h3>🌟 EMK K9.1.4</h3><p>Menyatakan kepentingan menghormati Jata Negara.<br><br>🔹 Jata Negara melambangkan kedaulatan negara<br>🔹 Menghormati lambang negara mencerminkan patriotisme<br>🔹 Simbol perpaduan rakyat berbilang kaum<br>🔹 Wajib dihormati oleh semua warga negara</p></div>
+    </div>
+    <div id="t9-nota" class="content-section">
+      <div class="info-card"><h3>🦅 Maksud Jata Negara</h3><p>Jata Negara ialah lambang rasmi negara Malaysia. Ia mengandungi lambang-lambang yang mewakili negeri-negeri dalam Persekutuan Malaysia serta nilai-nilai yang dijunjung oleh rakyat Malaysia.</p></div>
+      <div class="info-card"><h3>🔵 Simbol pada Jata Negara</h3><p>• <strong>Perisai</strong> – Mengandungi 5 keris (keris Melayu), bulan bintang, pokok pinang dan lima jalur (negeri-negeri Melayu asal)<br>• <strong>Harimau Malaya</strong> – Dua ekor harimau sebagai penyokong<br>• <strong>Bulan Bintang</strong> – Islam sebagai agama rasmi<br>• <strong>Pokok Hibiscus</strong> – Bunga kebangsaan Malaysia<br>• <strong>Jalur Merah Biru</strong> – Mewakili negeri-negeri</p></div>
+      <div class="info-card"><h3>🎨 Warna dan Lambang</h3><p>• <strong>Merah</strong> – Keberanian dan kekuatan<br>• <strong>Putih</strong> – Kesucian dan kemurnian<br>• <strong>Kuning</strong> – Warna Diraja<br>• <strong>Hitam</strong> – Keteguhan dan kekuatan<br>• <strong>Biru</strong> – Perpaduan dan keamanan</p></div>
+      <div class="info-card"><h3>💫 Kepentingan Menghormati Jata Negara</h3><p>• Tanda kesetiaan kepada negara<br>• Melambangkan perpaduan rakyat Malaysia<br>• Simbol kedaulatan dan kemerdekaan<br>• Mencerminkan identiti bangsa Malaysia<br>• Wajib dihormati dalam semua majlis rasmi</p></div>
+    </div>
+    <div id="t9-video" class="content-section">
+      <div class="video-wrap">
+        <h3 style="color:var(--navy);font-family:'Cinzel',serif;margin-bottom:1rem;">🎬 Video Pembelajaran</h3>
+        <div class="video-placeholder">
+          <video controls style="width:100%;border-radius:12px;" onerror="this.parentElement.innerHTML='<div style=\'padding:2rem;text-align:center\'><div style=\'font-size:3rem\'>🎬</div><p style=\'color:var(--gold3);margin-top:.5rem\'>Letakkan fail video dalam folder <strong>video/tajuk9.mp4</strong></p></div>'">
+            <source src="video/tajuk9.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="info-card" style="margin-top:1rem;margin-bottom:0;"><h3>📝 Penerangan Video</h3><p>Video ini menerangkan tentang Jata Negara Malaysia, simbol-simbolnya dan kepentingan menghormati lambang negara kita.</p></div>
+      </div>
+    </div>
+    <div id="t9-aktiviti" class="content-section">
+      <h3 class="activity-title">🎯 Pilihan Jawapan – Jata Negara</h3>
+      <div id="jata-mcq" style="display:grid;gap:1rem;"></div>
+      <div id="jata-result" class="act-result" style="margin-top:1rem;"></div>
+      <hr style="margin:2rem 0;border:1px solid #eee;">
+      <h3 class="activity-title">✏️ Isi Tempat Kosong – Simbol Negara</h3>
+      <div class="fill-item"><span>1. Bunga kebangsaan Malaysia ialah _______</span><input class="fill-input" id="fill9-1" placeholder="Jawapan..."></div>
+      <div class="fill-item"><span>2. Warna _______ melambangkan keberanian.</span><input class="fill-input" id="fill9-2" placeholder="Jawapan..."></div>
+      <div class="fill-item"><span>3. Harimau Malaya adalah _______ Jata Negara.</span><input class="fill-input" id="fill9-3" placeholder="Jawapan..."></div>
+      <div class="fill-item"><span>4. Warna _______ adalah warna Diraja.</span><input class="fill-input" id="fill9-4" placeholder="Jawapan..."></div>
+      <button class="check-act-btn" onclick="checkFill9()">✅ Semak Jawapan</button>
+      <div id="fill-result-9" class="act-result"></div>
+    </div>
+    <div id="t9-kuiz" class="content-section">
+      <div class="quiz-wrapper">
+        <h3 style="font-family:'Cinzel',serif;color:var(--navy);margin-bottom:1.5rem;font-size:1.2rem;">🦅 Kuiz – Tajuk 9</h3>
+        <div id="quiz9-form">
+          <div class="quiz-form-row"><label>Nama Murid *</label><input id="q9-name" placeholder="Masukkan nama penuh..." required></div>
+          <div class="quiz-form-row"><label>Kelas *</label>
+            <select id="q9-class">
+              <option value="">-- Pilih Kelas --</option>
+              <option>5 Amanah</option><option>5 Bestari</option><option>5 Cemerlang</option>
+              <option>5 Dedikasi</option><option>5 Emas</option><option>5 Fokus</option>
+            </select>
+          </div>
+          <button class="start-btn" onclick="startQuiz(9)">🚀 Mulakan Kuiz</button>
+        </div>
+        <div id="quiz9-area" class="quiz-area">
+          <div class="quiz-timer" id="q9-timer">⏱ 00:00</div>
+          <div class="quiz-progress"><div class="quiz-progress-bar" id="q9-bar" style="width:0%"></div></div>
+          <div class="quiz-q-num" id="q9-qnum"></div>
+          <div class="quiz-question" id="q9-question"></div>
+          <div class="quiz-options" id="q9-options"></div>
+          <div class="quiz-feedback" id="q9-feedback"></div>
+          <button class="next-btn" id="q9-next" onclick="nextQuestion(9)">Seterusnya ➡️</button>
+        </div>
+        <div id="quiz9-result" class="quiz-result">
+          <div class="result-score" id="q9-score"></div>
+          <div class="result-msg" id="q9-msg"></div>
+          <button class="retry-btn" onclick="retryQuiz(9)">🔄 Cuba Semula</button>
+          <button class="retry-btn" onclick="showPage('records-page')">📊 Lihat Rekod</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECORDS PAGE -->
+<div id="records-page" class="page topic-page">
+  <div class="topic-header">
+    <div style="font-size:3rem;margin-bottom:.5rem;">📊</div>
+    <h2>Rekod Jawapan Kuiz</h2>
+    <p>Sistem Rekod Online • Data disimpan secara automatik</p>
+    <div style="margin-top:.8rem;">
+      <span id="fb-indicator2" class="fb-status offline"><span class="fb-dot"></span>Menghubungi pangkalan data...</span>
+    </div>
+  </div>
+  <div style="padding:1.5rem;max-width:1000px;margin:0 auto;">
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.5rem;" id="rec-stats"></div>
+    <!-- Leaderboard -->
+    <div class="leaderboard" id="leaderboard-section">
+      <p class="lb-title">🏆 Papan Markah Terkini</p>
+      <div id="leaderboard-list"></div>
+    </div>
+    <hr style="margin:1.5rem 0;border:1px solid #dde;">
+    <!-- Records Table -->
+    <div class="records-wrapper">
+      <div class="records-header">
+        <h3>📋 Semua Rekod Murid</h3>
+        <div class="rec-actions">
+          <button class="rec-btn rec-btn-ref" onclick="loadRecords()">🔄 Muat Semula</button>
+          <button class="rec-btn rec-btn-dl" onclick="downloadJSON()">⬇️ JSON</button>
+          <button class="rec-btn rec-btn-csv" onclick="downloadCSV()">📄 CSV</button>
+        </div>
+      </div>
+      <div class="rec-table-wrap">
+        <table class="rec-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama</th>
+              <th>Kelas</th>
+              <th>Topik</th>
+              <th>Markah</th>
+              <th>Masa</th>
+              <th>Tarikh</th>
+              <th>Urus</th>
+            </tr>
+          </thead>
+          <tbody id="rec-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="edit-modal" id="edit-modal">
+  <div class="edit-box">
+    <h3>✏️ Kemaskini Rekod</h3>
+    <input id="edit-name" placeholder="Nama Murid">
+    <select id="edit-class">
+      <option>5 Amanah</option><option>5 Bestari</option><option>5 Cemerlang</option>
+      <option>5 Dedikasi</option><option>5 Emas</option><option>5 Fokus</option>
+    </select>
+    <input id="edit-score" type="number" min="0" max="10" placeholder="Markah (0-10)">
+    <input type="hidden" id="edit-id">
+    <div>
+      <button class="edit-save" onclick="saveEdit()">💾 Simpan</button>
+      <button class="edit-cancel" onclick="closeModal()">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- BACK TO TOP -->
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲</button>
+
+<footer>
+  <p>Website Pembelajaran Sejarah Tahun 5</p>
+  <p>Dibangunkan untuk PdP Interaktif Sekolah Rendah</p>
+</footer>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ==========================================
+// FIREBASE CONFIGURATION
+// Replace with your own Firebase project config
+// Get it from: https://console.firebase.google.com
+// ==========================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDEMO_REPLACE_WITH_YOUR_KEY",
+  authDomain: "sejarah-t5.firebaseapp.com",
+  projectId: "sejarah-t5",
+  storageBucket: "sejarah-t5.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:0000000000000000"
+};
+
+let db = null;
+let unsubscribe = null;
+
+try {
+  const app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  window._db = db;
+  window._fbModules = { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy };
+  setFBStatus(true);
+  startRealTimeListener();
+} catch(e) {
+  setFBStatus(false);
+  console.warn('Firebase tidak tersambung. Menggunakan penyimpanan tempatan.');
+}
+
+function setFBStatus(online) {
+  ['fb-indicator','fb-indicator2'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) {
+      el.className = 'fb-status ' + (online ? 'online' : 'offline');
+      el.innerHTML = `<span class="fb-dot"></span>${online ? '🟢 Firebase Online – Data disimpan secara masa nyata' : '🔴 Mod Luar Talian – Data disimpan pada peranti'}`;
+    }
+  });
+  window._fbOnline = online;
+}
+
+function startRealTimeListener() {
+  if(!db) return;
+  const { collection: col, onSnapshot: snap, query: q, orderBy: ob } = window._fbModules;
+  const colRef = q(col(db, 'kuizRekod'), ob('timestamp','desc'));
+  if(unsubscribe) unsubscribe();
+  unsubscribe = snap(colRef, (snapshot) => {
+    const records = [];
+    snapshot.forEach(d => records.push({id: d.id, ...d.data()}));
+    window._liveRecords = records;
+    renderRecords(records);
+    renderLeaderboard(records);
+    renderStats(records);
+  }, () => { setFBStatus(false); loadFromLocal(); });
+}
+
+window.saveToFirebase = async function(record) {
+  if(!db) return saveToLocal(record);
+  try {
+    const { collection: col, addDoc: add } = window._fbModules;
+    await add(col(db, 'kuizRekod'), record);
+  } catch(e) { saveToLocal(record); }
+};
+
+window.deleteFromFirebase = async function(id) {
+  if(!db) { deleteFromLocal(id); loadFromLocal(); return; }
+  try {
+    const { doc: docRef, deleteDoc: del } = window._fbModules;
+    await del(docRef(db, 'kuizRekod', id));
+  } catch(e) { console.error(e); }
+};
+
+window.updateInFirebase = async function(id, data) {
+  if(!db) { updateInLocal(id, data); loadFromLocal(); return; }
+  try {
+    const { doc: docRef, updateDoc: upd } = window._fbModules;
+    await upd(docRef(db, 'kuizRekod', id), data);
+  } catch(e) { console.error(e); }
+};
+
+window.loadRecords = async function() {
+  if(!db) { loadFromLocal(); return; }
+  try {
+    const { collection: col, getDocs: get, query: q, orderBy: ob } = window._fbModules;
+    const snap = await get(q(col(db, 'kuizRekod'), ob('timestamp','desc')));
+    const records = [];
+    snap.forEach(d => records.push({id: d.id, ...d.data()}));
+    window._liveRecords = records;
+    renderRecords(records);
+    renderLeaderboard(records);
+    renderStats(records);
+  } catch(e) { loadFromLocal(); }
+};
+</script>
+
+<script>
+// ===== LOCAL STORAGE FALLBACK =====
+function saveToLocal(record) {
+  const recs = JSON.parse(localStorage.getItem('kuizRekod')||'[]');
+  record.id = 'local_' + Date.now();
+  recs.unshift(record);
+  localStorage.setItem('kuizRekod', JSON.stringify(recs));
+  loadFromLocal();
+}
+function loadFromLocal() {
+  const recs = JSON.parse(localStorage.getItem('kuizRekod')||'[]');
+  window._liveRecords = recs;
+  renderRecords(recs);
+  renderLeaderboard(recs);
+  renderStats(recs);
+}
+function deleteFromLocal(id) {
+  let recs = JSON.parse(localStorage.getItem('kuizRekod')||'[]');
+  recs = recs.filter(r => r.id !== id);
+  localStorage.setItem('kuizRekod', JSON.stringify(recs));
+}
+function updateInLocal(id, data) {
+  let recs = JSON.parse(localStorage.getItem('kuizRekod')||'[]');
+  recs = recs.map(r => r.id === id ? {...r,...data} : r);
+  localStorage.setItem('kuizRekod', JSON.stringify(recs));
+}
+
+// ===== QUIZ DATA =====
+const QUIZZES = {
+  7: [
+    {q:"Dol Said adalah pahlawan dari negeri mana?",opts:["Perak","Naning (Melaka)","Kelantan","Sabah"],ans:1},
+    {q:"Siapakah pahlawan Iban yang menentang Rajah Brooke di Sarawak?",opts:["Sharif Masahor","Tok Janggut","Rentap","Mat Salleh"],ans:2},
+    {q:"Dato' Maharaja Lela membunuh siapa pada tahun 1875?",opts:["James Brooke","J.W.W. Birch","Frank Swettenham","Hugh Clifford"],ans:1},
+    {q:"Mat Salleh menentang penjajahan di negeri mana?",opts:["Sarawak","Perak","Sabah","Pahang"],ans:2},
+    {q:"Tok Janggut memimpin penentangan di negeri mana pada tahun 1915?",opts:["Terengganu","Pahang","Kedah","Kelantan"],ans:3},
+    {q:"Apakah iktibar utama daripada perjuangan tokoh pahlawan tempatan?",opts:["Menentang kerajaan","Semangat patriotisme dan cinta tanah air","Mencari kekayaan","Mendapat kuasa"],ans:1},
+    {q:"Haji Abdul Rahman Limbong menentang British di negeri mana?",opts:["Kelantan","Terengganu","Pahang","Perak"],ans:1},
+    {q:"Dato' Bahaman memimpin penentangan di negeri mana?",opts:["Pahang","Perak","Selangor","Johor"],ans:0},
+    {q:"Siapakah pahlawan yang menentang British di Negeri Sembilan?",opts:["Rentap","Tok Janggut","Yamtuan Antah","Dol Said"],ans:2},
+    {q:"Apakah tindakan yang dilakukan oleh tokoh-tokoh pahlawan tempatan?",opts:["Bekerjasama dengan penjajah","Melarikan diri","Menentang campur tangan dan penjajahan kuasa asing","Menjual tanah"],ans:2},
+  ],
+  8: [
+    {q:"Apakah maksud 'Yang di-Pertuan Agong'?",opts:["Ketua tentera negara","Tuan yang dipertuan – pemimpin tertinggi","Ketua hakim negara","Perdana Menteri"],ans:1},
+    {q:"YDPA dipilih setiap berapa tahun sekali?",opts:["3 tahun","4 tahun","5 tahun","6 tahun"],ans:2},
+    {q:"YDPA adalah Ketua Agama Islam yang mana?",opts:["Negeri Selangor","Persekutuan Malaysia","Negeri Perak","Seluruh dunia"],ans:1},
+    {q:"Siapakah yang melantik Perdana Menteri?",opts:["Rakyat","Parlimen","Yang di-Pertuan Agong","Jemaah Menteri"],ans:2},
+    {q:"Apakah 'Nobat' dalam konteks istana?",opts:["Makanan istana","Alat muzik kebesaran","Pakaian diraja","Senjata diraja"],ans:1},
+    {q:"YDPA dipilih daripada kalangan berapa Raja-Raja Melayu?",opts:["7","9","11","13"],ans:1},
+    {q:"Apakah kepentingan YDPA sebagai tonggak perpaduan?",opts:["Simbol perpaduan rakyat berbilang kaum","Mengutip cukai","Menguruskan tentera","Membuat undang-undang"],ans:0},
+    {q:"Apakah salah satu alat kebesaran diraja?",opts:["Kereta diraja","Cogan Emas dan Perak","Mahkota besi","Cincin perak"],ans:1},
+    {q:"YDPA berkuasa mengisytiharkan apa jika perlu?",opts:["Cuti umum","Hari kelepasan","Darurat","Pilihanraya"],ans:2},
+    {q:"Berapakah umur minimum untuk menjadi YDPA?",opts:["21 tahun","25 tahun","30 tahun","35 tahun"],ans:0},
+  ],
+  9: [
+    {q:"Apakah nama lambang rasmi negara Malaysia?",opts:["Bendera Malaysia","Jalur Gemilang","Jata Negara","Lambang Diraja"],ans:2},
+    {q:"Berapa ekor harimau terdapat dalam Jata Negara?",opts:["1","2","3","4"],ans:1},
+    {q:"Apakah warna yang melambangkan keberanian dalam Jata Negara?",opts:["Putih","Kuning","Merah","Biru"],ans:2},
+    {q:"Warna kuning dalam Jata Negara melambangkan apa?",opts:["Keamanan","Warna Diraja","Keberanian","Kesucian"],ans:1},
+    {q:"Apakah bunga kebangsaan Malaysia yang terdapat dalam Jata Negara?",opts:["Orkid","Bunga Raya (Hibiscus)","Cempaka","Melur"],ans:1},
+    {q:"Apakah yang dilambangkan oleh bulan bintang dalam Jata Negara?",opts:["Kemerdekaan","Islam sebagai agama rasmi","Jumlah negeri","Perpaduan"],ans:1},
+    {q:"Apakah kepentingan menghormati Jata Negara?",opts:["Sekadar tradisi","Tanda kesetiaan kepada negara","Paksaan undang-undang","Tidak penting"],ans:1},
+    {q:"Warna putih dalam Jata Negara melambangkan apa?",opts:["Keberanian","Warna Diraja","Kesucian dan kemurnian","Kekuatan"],ans:2},
+    {q:"Jata Negara digunakan dalam majlis apa?",opts:["Majlis perkahwinan sahaja","Semua majlis tidak rasmi","Semua majlis rasmi","Majlis sukan sahaja"],ans:2},
+    {q:"Apakah yang terdapat di bahagian bawah perisai Jata Negara?",opts:["5 keris","Bintang 14 mata","Pokok Hibiscus","Bulan sabit"],ans:0},
+  ]
+};
+
+// ===== QUIZ STATE =====
+const quizState = {};
+
+function startQuiz(topic) {
+  const name = document.getElementById('q'+topic+'-name').value.trim();
+  const cls = document.getElementById('q'+topic+'-class').value;
+  if(!name){alert('Sila masukkan nama murid!');return;}
+  if(!cls){alert('Sila pilih kelas!');return;}
+  quizState[topic] = {name, cls, q:0, score:0, timer:0, interval:null, startTime: Date.now()};
+  document.getElementById('quiz'+topic+'-form').style.display='none';
+  document.getElementById('quiz'+topic+'-area').style.display='block';
+  startTimer(topic);
+  showQuestion(topic);
+}
+
+function startTimer(topic) {
+  quizState[topic].interval = setInterval(()=>{
+    quizState[topic].timer++;
+    const m = Math.floor(quizState[topic].timer/60).toString().padStart(2,'0');
+    const s = (quizState[topic].timer%60).toString().padStart(2,'0');
+    const el = document.getElementById('q'+topic+'-timer');
+    if(el) el.textContent = '⏱ '+m+':'+s;
+  },1000);
+}
+
+function showQuestion(topic) {
+  const state = quizState[topic];
+  const qs = QUIZZES[topic];
+  if(state.q >= qs.length) { finishQuiz(topic); return; }
+  const current = qs[state.q];
+  const pct = (state.q/qs.length*100).toFixed(0);
+  document.getElementById('q'+topic+'-bar').style.width = pct+'%';
+  document.getElementById('q'+topic+'-qnum').textContent = 'Soalan '+(state.q+1)+' / '+qs.length;
+  document.getElementById('q'+topic+'-question').textContent = current.q;
+  const optDiv = document.getElementById('q'+topic+'-options');
+  optDiv.innerHTML = '';
+  current.opts.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = ['A','B','C','D'][i]+'. '+opt;
+    btn.onclick = ()=>checkAnswer(topic, i, current.ans, btn);
+    optDiv.appendChild(btn);
+  });
+  const fb = document.getElementById('q'+topic+'-feedback');
+  fb.className = 'quiz-feedback';
+  fb.textContent = '';
+  const next = document.getElementById('q'+topic+'-next');
+  next.className = 'next-btn';
+}
+
+function checkAnswer(topic, chosen, correct, btn) {
+  const opts = document.querySelectorAll('#q'+topic+'-options .quiz-opt');
+  opts.forEach(b=>b.classList.add('disabled'));
+  const fb = document.getElementById('q'+topic+'-feedback');
+  if(chosen === correct) {
+    btn.classList.add('correct');
+    opts[correct].classList.add('correct');
+    fb.textContent = '✅ Betul! Tahniah!';
+    fb.className = 'quiz-feedback correct-fb show';
+    quizState[topic].score++;
+  } else {
+    btn.classList.add('wrong');
+    opts[correct].classList.add('correct');
+    fb.textContent = '❌ Salah. Jawapan betul: '+['A','B','C','D'][correct];
+    fb.className = 'quiz-feedback wrong-fb show';
+  }
+  document.getElementById('q'+topic+'-next').className = 'next-btn show';
+}
+
+function nextQuestion(topic) {
+  quizState[topic].q++;
+  showQuestion(topic);
+}
+
+function finishQuiz(topic) {
+  clearInterval(quizState[topic].interval);
+  const state = quizState[topic];
+  const total = QUIZZES[topic].length;
+  const pct = Math.round(state.score/total*100);
+  document.getElementById('quiz'+topic+'-area').style.display='none';
+  const resDiv = document.getElementById('quiz'+topic+'-result');
+  resDiv.style.display='block';
+  document.getElementById('q'+topic+'-score').textContent = state.score+'/'+total;
+  let msg = pct>=80?'🌟 Cemerlang! Teruskan usaha terbaik!':pct>=60?'👍 Bagus! Boleh tingkatkan lagi!':pct>=40?'📚 Cuba lagi! Ulangkaji nota dengan teliti.':'💪 Jangan berputus asa! Baca nota semula.';
+  document.getElementById('q'+topic+'-msg').textContent = msg;
+  const m = Math.floor(state.timer/60).toString().padStart(2,'0');
+  const s = (state.timer%60).toString().padStart(2,'0');
+  const record = {
+    nama: state.name,
+    kelas: state.cls,
+    topik: 'Tajuk '+topic,
+    markah: state.score,
+    jumlah: total,
+    peratus: pct,
+    masa: m+':'+s,
+    timestamp: new Date().toISOString(),
+    tarikh: new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+  };
+  if(window.saveToFirebase) window.saveToFirebase(record);
+  else saveToLocal(record);
+}
+
+function retryQuiz(topic) {
+  document.getElementById('quiz'+topic+'-result').style.display='none';
+  document.getElementById('quiz'+topic+'-form').style.display='block';
+  document.getElementById('q'+topic+'-name').value='';
+  document.getElementById('q'+topic+'-class').value='';
+}
+
+// ===== RENDER RECORDS =====
+function renderRecords(records) {
+  const tbody = document.getElementById('rec-tbody');
+  if(!tbody) return;
+  if(!records || records.length===0){
+    tbody.innerHTML='<tr><td colspan="8" class="no-records">Tiada rekod. Murid belum menjawab kuiz.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = records.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${r.nama||'-'}</strong></td>
+      <td>${r.kelas||'-'}</td>
+      <td><span class="badge badge-${r.topik?.includes('7')?'7':r.topik?.includes('8')?'8':'9'}">${r.topik||'-'}</span></td>
+      <td><strong>${r.markah||0}/${r.jumlah||10}</strong> (${r.peratus||0}%)</td>
+      <td>⏱ ${r.masa||'--:--'}</td>
+      <td style="font-size:.78rem;">${r.tarikh||'-'}</td>
+      <td>
+        <button class="del-rec" onclick="editRecord('${r.id}','${(r.nama||'').replace(/'/g,"\\'")}','${r.kelas||''}',${r.markah||0})" title="Edit">✏️</button>
+        <button class="del-rec" onclick="confirmDelete('${r.id}')" title="Padam">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderStats(records) {
+  const el = document.getElementById('rec-stats');
+  if(!el) return;
+  const total = records.length;
+  const avg = total ? Math.round(records.reduce((a,r)=>a+(r.peratus||0),0)/total) : 0;
+  const t7 = records.filter(r=>r.topik?.includes('7')).length;
+  const t8 = records.filter(r=>r.topik?.includes('8')).length;
+  const t9 = records.filter(r=>r.topik?.includes('9')).length;
+  el.innerHTML = `
+    <div style="background:#fff;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <div style="font-size:1.8rem;font-weight:900;color:#0a1628;">${total}</div>
+      <div style="font-size:.8rem;color:#888;margin-top:.3rem;">Jumlah Percubaan</div>
+    </div>
+    <div style="background:#fff;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <div style="font-size:1.8rem;font-weight:900;color:#d4a017;">${avg}%</div>
+      <div style="font-size:.8rem;color:#888;margin-top:.3rem;">Purata Markah</div>
+    </div>
+    <div style="background:#fff3cd;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <div style="font-size:1.8rem;font-weight:900;color:#856404;">${t7}</div>
+      <div style="font-size:.8rem;color:#888;margin-top:.3rem;">Tajuk 7</div>
+    </div>
+    <div style="background:#d1ecf1;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <div style="font-size:1.8rem;font-weight:900;color:#0c5460;">${t8}</div>
+      <div style="font-size:.8rem;color:#888;margin-top:.3rem;">Tajuk 8</div>
+    </div>
+    <div style="background:#d4edda;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <div style="font-size:1.8rem;font-weight:900;color:#155724;">${t9}</div>
+      <div style="font-size:.8rem;color:#888;margin-top:.3rem;">Tajuk 9</div>
+    </div>
+  `;
+}
+
+function renderLeaderboard(records) {
+  const el = document.getElementById('leaderboard-list');
+  if(!el) return;
+  if(!records || records.length===0){el.innerHTML='<p style="color:#888;font-size:.9rem;">Tiada rekod lagi.</p>';return;}
+  const top = [...records].sort((a,b)=>(b.peratus||0)-(a.peratus||0)).slice(0,5);
+  const medals = ['gold','silver','bronze','',''];
+  const trophies = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+  el.innerHTML = top.map((r,i)=>`
+    <div class="lb-item">
+      <div class="lb-rank ${medals[i]}">${trophies[i]}</div>
+      <div>
+        <div class="lb-name">${r.nama||'-'}</div>
+        <div class="lb-class">${r.kelas||'-'} • ${r.topik||'-'}</div>
+      </div>
+      <div class="lb-score">${r.markah||0}/${r.jumlah||10} <span style="font-size:.8rem;color:#888;">(${r.peratus||0}%)</span></div>
+    </div>
+  `).join('');
+}
+
+// ===== CRUD =====
+window.confirmDelete = function(id) {
+  if(confirm('Padam rekod ini? Tindakan ini tidak boleh dibatalkan.')) {
+    if(window.deleteFromFirebase) window.deleteFromFirebase(id);
+    else { deleteFromLocal(id); loadFromLocal(); }
+  }
+};
+window.editRecord = function(id, name, cls, score) {
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-name').value = name;
+  document.getElementById('edit-class').value = cls;
+  document.getElementById('edit-score').value = score;
+  document.getElementById('edit-modal').classList.add('show');
+};
+window.saveEdit = function() {
+  const id = document.getElementById('edit-id').value;
+  const name = document.getElementById('edit-name').value.trim();
+  const cls = document.getElementById('edit-class').value;
+  const score = parseInt(document.getElementById('edit-score').value)||0;
+  if(!name){alert('Sila masukkan nama!');return;}
+  if(window.updateInFirebase) window.updateInFirebase(id, {nama:name, kelas:cls, markah:score, peratus:Math.round(score/10*100)});
+  else { updateInLocal(id, {nama:name, kelas:cls, markah:score, peratus:Math.round(score/10*100)}); loadFromLocal(); }
+  closeModal();
+};
+window.closeModal = function() {
+  document.getElementById('edit-modal').classList.remove('show');
+};
+
+// ===== DOWNLOAD =====
+window.downloadJSON = function() {
+  const recs = window._liveRecords || [];
+  const blob = new Blob([JSON.stringify(recs, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='rekod_kuiz.json'; a.click();
+};
+window.downloadCSV = function() {
+  const recs = window._liveRecords || [];
+  const header = 'Nama,Kelas,Topik,Markah,Jumlah,Peratus,Masa,Tarikh';
+  const rows = recs.map(r=>`"${r.nama||''}","${r.kelas||''}","${r.topik||''}",${r.markah||0},${r.jumlah||10},${r.peratus||0},"${r.masa||''}","${r.tarikh||''}"`);
+  const csv = [header,...rows].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='rekod_kuiz.csv'; a.click();
+};
+
+// ===== NAVIGATION =====
+window.showPage = function(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='records-page') {
+    if(window.loadRecords) window.loadRecords();
+    else loadFromLocal();
+  }
+};
+window.showTopic = function(t) {
+  showPage('topic'+t);
+};
+window.showSection = function(topic, sec) {
+  document.querySelectorAll('#topic'+topic+' .content-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('t'+topic+'-'+sec)?.classList.add('active');
+  document.querySelectorAll('#topic'+topic+' .tnav-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  if(sec==='aktiviti' && topic===9) buildJataMCQ();
+};
+
+// ===== ACTIVITIES =====
+window.drag = function(e) { e.dataTransfer.setData('text', e.target.id); };
+window.allowDrop = function(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); };
+window.drop = function(e, expected) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const id = e.dataTransfer.getData('text');
+  const el = document.getElementById(id);
+  if(!el) return;
+  const label = el.textContent.trim();
+  if(label === expected) {
+    e.currentTarget.innerHTML='<div class="drag-item" style="cursor:default;background:#27ae60;">✅ '+label+'</div>';
+    el.style.opacity='.3'; el.draggable=false;
+    checkAllDropped();
+  } else {
+    e.currentTarget.style.borderColor='#c0392b';
+    setTimeout(()=>e.currentTarget.style.borderColor='',1000);
+    document.getElementById('dnd-result').textContent='❌ Cuba lagi!';
+    document.getElementById('dnd-result').style.color='#c0392b';
+  }
+};
+function checkAllDropped() {
+  const filled = document.querySelectorAll('#t7-aktiviti .drop-zone .drag-item').length;
+  if(filled===4){ document.getElementById('dnd-result').textContent='🌟 Tahniah! Semua jawapan betul!'; document.getElementById('dnd-result').style.color='#27ae60'; }
+}
+window.checkFill7 = function() {
+  const answers = [document.getElementById('fill1').value.toLowerCase().trim(),document.getElementById('fill2').value.toLowerCase().trim(),document.getElementById('fill3').value.toLowerCase().trim(),document.getElementById('fill4').value.toLowerCase().trim()];
+  const correct = ['melaka','iban','syarikat borneo utara british','kelantan'];
+  let right=0;
+  answers.forEach((a,i)=>{if(a.includes(correct[i].split(' ')[0]))right++;});
+  document.getElementById('fill-result-7').textContent=right===4?'🌟 Cemerlang! Semua betul!':'✅ '+right+'/4 betul. Cuba semula!';
+  document.getElementById('fill-result-7').style.color=right===4?'#27ae60':'#d4a017';
+};
+window.checkFill8 = function() {
+  const a1=document.getElementById('fill8-1').value.toLowerCase().trim();
+  const a2=document.getElementById('fill8-2').value.toLowerCase().trim();
+  const a3=document.getElementById('fill8-3').value.toLowerCase().trim();
+  const a4=document.getElementById('fill8-4').value.toLowerCase().trim();
+  let r=0;
+  if(a1.includes('5')||a1.includes('lima'))r++;
+  if(a2.includes('islam'))r++;
+  if(a3.includes('semb')||a3.includes('9'))r++;
+  if(a4.includes('muzik')||a4.includes('alat'))r++;
+  document.getElementById('fill-result-8').textContent=r===4?'🌟 Cemerlang!':'✅ '+r+'/4 betul. Cuba lagi!';
+  document.getElementById('fill-result-8').style.color=r===4?'#27ae60':'#d4a017';
+};
+window.checkFill9 = function() {
+  const a1=document.getElementById('fill9-1').value.toLowerCase().trim();
+  const a2=document.getElementById('fill9-2').value.toLowerCase().trim();
+  const a3=document.getElementById('fill9-3').value.toLowerCase().trim();
+  const a4=document.getElementById('fill9-4').value.toLowerCase().trim();
+  let r=0;
+  if(a1.includes('bunga raya')||a1.includes('hibiscus'))r++;
+  if(a2.includes('merah'))r++;
+  if(a3.includes('penyokong')||a3.includes('pend'))r++;
+  if(a4.includes('kuning'))r++;
+  document.getElementById('fill-result-9').textContent=r===4?'🌟 Cemerlang!':'✅ '+r+'/4 betul. Cuba lagi!';
+  document.getElementById('fill-result-9').style.color=r===4?'#27ae60':'#d4a017';
+};
+
+function buildJataMCQ() {
+  const el = document.getElementById('jata-mcq');
+  if(!el || el.children.length>0) return;
+  const qs = [
+    {q:"Berapa banyak warna utama dalam Jata Negara?",opts:["3","4","5","6"],ans:2,checked:null},
+    {q:"Apakah yang dipegang oleh harimau dalam Jata Negara?",opts:["Pedang","Perisai","Bunga","Bendera"],ans:1,checked:null},
+    {q:"Motto Jata Negara berbunyi:",opts:["Bersatu teguh","Ke arah yang lebih baik","Bersekutu bertambah mutu","Maju bersama"],ans:2,checked:null},
+  ];
+  qs.forEach((q,qi)=>{
+    const div=document.createElement('div');
+    div.style.cssText='background:#fff;border-radius:12px;padding:1rem;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:.5rem;';
+    div.innerHTML=`<p style="font-weight:700;color:#1a2744;margin-bottom:.8rem;">${qi+1}. ${q.q}</p>`+
+      q.opts.map((o,oi)=>`<label style="display:flex;align-items:center;gap:.6rem;padding:.4rem;cursor:pointer;font-size:.9rem;"><input type="radio" name="jq${qi}" value="${oi}" onchange="window._jataAns=window._jataAns||{};window._jataAns[${qi}]=${oi}"> ${['A','B','C','D'][oi]}. ${o}</label>`).join('');
+    el.appendChild(div);
+  });
+  const btn=document.createElement('button');
+  btn.className='check-act-btn';
+  btn.textContent='✅ Semak Jawapan';
+  btn.onclick=()=>{
+    const ans=window._jataAns||{};
+    let r=0;
+    qs.forEach((q,i)=>{if(ans[i]===q.ans)r++;});
+    document.getElementById('jata-result').textContent=r===3?'🌟 Hebat! Semua betul!':'✅ '+r+'/3 betul. Ulangkaji semula!';
+    document.getElementById('jata-result').style.color=r===3?'#27ae60':'#d4a017';
+  };
+  el.parentElement.insertBefore(btn, document.getElementById('jata-result'));
+}
+
+// ===== CLOCK =====
+function updateClock() {
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleDateString('ms-MY')+' '+now.toLocaleTimeString('ms-MY');
+}
+setInterval(updateClock, 1000); updateClock();
+
+// ===== DARK MODE =====
+window.toggleDark = function() {
+  document.body.classList.toggle('light-mode');
+  document.getElementById('darkToggle').textContent = document.body.classList.contains('light-mode')? '🌙':'☀️';
+};
+
+// ===== BACK TO TOP =====
+window.addEventListener('scroll',()=>{
+  document.getElementById('btt').classList.toggle('show', window.scrollY>400);
+});
+
+// ===== LOADING =====
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{
+    const l=document.getElementById('loading');
+    l.style.opacity='0';
+    setTimeout(()=>l.style.display='none',600);
+    loadFromLocal();
+  }, 1800);
+});
+
+window._liveRecords = [];
+window.renderRecords = renderRecords;
+window.renderLeaderboard = renderLeaderboard;
+window.renderStats = renderStats;
+</script>
+</body>
+</html>
